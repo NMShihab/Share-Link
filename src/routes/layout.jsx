@@ -4,8 +4,22 @@ import LinkIcon from "../components/icons/LinkIcon";
 import ButtonWithIcon from "../components/ui/ButtonWithIcon";
 import Left from "../components/Left";
 import Heading from "../components/Heading";
+import LinkCard from "../components/AddLinks/LinkCard";
+import UserContext from "../context/UserContext";
+import { useContext, useState } from "react";
 
 const Layout = () => {
+  const { user, addLink } = useContext(UserContext);
+  // Load links initially from context
+
+  const handleAddNewLink = () => {
+    const basicLink = {
+      platform_name: "",
+      link: "",
+      isValid: false,
+    };
+    addLink(basicLink); // Add a new empty card
+  };
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="pt-2">
@@ -60,9 +74,18 @@ const Layout = () => {
                 title="Customize Your Links"
                 description="Add your favourite url And share your profile"
               />
-              <ButtonWithoutBackground className={"w-full my-3"}>
+              <ButtonWithoutBackground
+                className={"w-full my-3"}
+                onClick={handleAddNewLink}
+              >
                 + Add new link
               </ButtonWithoutBackground>
+              <div className=" flex flex-col gap-4">
+                {user?.links?.length > 0 &&
+                  user.links.map((card, index) => (
+                    <LinkCard key={index} linkdata={card} />
+                  ))}
+              </div>
             </div>
           </div>
         </div>
