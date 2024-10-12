@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
-const PlatformButton = ({ platformName }) => {
+const PlatformButton = ({ platformName, link }) => {
   const [bgColor, setBgcolor] = useState(null);
   const [icon, setIcon] = useState(null);
 
@@ -56,12 +57,13 @@ const PlatformButton = ({ platformName }) => {
   }, [platformName]);
 
   return (
-    <button
+    <Link
       className={`flex items-center justify-center h-10 w-48 rounded-md ${bgColor} text-white hover:opacity-80 transition-opacity`}
+      to={link}
     >
       <span className="mr-2">{icon}</span>
       <span>{platformName}</span>
-    </button>
+    </Link>
   );
 };
 
@@ -69,4 +71,5 @@ export default PlatformButton;
 
 PlatformButton.propTypes = {
   platformName: PropTypes.string.isRequired,
+  link: PropTypes.string.isRequired,
 };

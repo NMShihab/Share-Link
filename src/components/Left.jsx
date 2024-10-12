@@ -9,11 +9,13 @@ const Left = () => {
   const { user } = useContext(UserContext);
   const [resnderButtons, setRenderButtons] = useState([]);
 
+  console.log(user);
+
   useEffect(() => {
     let renderButton = [];
     const validUrlCount = user.links.filter((link) => link.isValid).length;
 
-    for (let i = 0; i < 5 - validUrlCount; i++) {
+    for (let i = 0; i < 3 - validUrlCount; i++) {
       renderButton.push(
         <SkeletonButton width={"w-48"} height={"h-10"} key={i} />
       );
@@ -32,12 +34,28 @@ const Left = () => {
           </div>
 
           {/* Screen (You can place your loader here) */}
-          <div className="flex items-center justify-center gap-3 flex-col min-h-[430px] top-8 mt-6 mb-4  left-0 right-0 bottom-0 bg-white rounded-3xl">
-            <SkeletonCircle size={"h-24 w-24"} />
+          <div className="flex items-center justify-center gap-3 flex-col min-h-[430px] top-8 mt-6 mb-6  left-0 right-0 bottom-0 bg-white rounded-3xl">
+            {user.image ? (
+              <img
+                src={user.image}
+                alt="Profile"
+                className="h-24 w-24 rounded-full object-cover"
+              />
+            ) : (
+              <SkeletonCircle size={"h-24 w-24"} />
+            )}
 
-            <Shimmer height={"h-2"} width={"w-36"} />
+            {user.first_name ? (
+              <h1 className="text-2xl font-bold">{user.first_name}</h1>
+            ) : (
+              <Shimmer height={"h-4"} width={"w-24"} />
+            )}
 
-            <Shimmer height={"h-2"} width={"w-24"} />
+            {user.email ? (
+              <p className="text-gray-600">{user.email}</p>
+            ) : (
+              <Shimmer height={"h-2"} width={"w-24"} />
+            )}
 
             {user.links.length > 0 &&
               user.links.map(
@@ -45,6 +63,7 @@ const Left = () => {
                   card.isValid && (
                     <PlatformButton
                       platformName={card.platform_name}
+                      link={card.link}
                       key={card.id}
                     />
                   )

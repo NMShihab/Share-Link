@@ -40,11 +40,13 @@ const platforms = [
   },
 ];
 
-const LinkCard = ({ linkdata }) => {
-  const { user, addLink, editLink, removeLink } = useContext(UserContext);
-  const [selectedPlatform, setSelectedPlatform] = useState<string>("");
-  const [link, setLink] = useState("");
-  const [isLinkValid, setIsLinkValid] = useState(true);
+const LinkCard = ({ linkdata, index }) => {
+  const { editLink, removeLink } = useContext(UserContext);
+  const [selectedPlatform, setSelectedPlatform] = useState<string>(
+    linkdata.platform_name || ""
+  );
+  const [link, setLink] = useState(linkdata.link || "");
+  const [isLinkValid, setIsLinkValid] = useState(linkdata.isValid || true);
   const handlePlatformChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedPlatform(e.target.value);
     setLink("");
@@ -112,7 +114,9 @@ const LinkCard = ({ linkdata }) => {
   return (
     <div className="w-full bg-gray-200 p-4 rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-4">
-        <p className="text-lg text-gray-600 font-semibold mb-2">Link #1</p>
+        <p className="text-lg text-gray-600 font-semibold mb-2">
+          Link #{index + 1}
+        </p>
         <p
           className="text-sm text-gray-600 mb-4 cursor-pointer"
           onClick={handleRemove}

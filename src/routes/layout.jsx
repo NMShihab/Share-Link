@@ -3,23 +3,21 @@ import Profile from "../components/icons/Profile";
 import LinkIcon from "../components/icons/LinkIcon";
 import ButtonWithIcon from "../components/ui/ButtonWithIcon";
 import Left from "../components/Left";
-import Heading from "../components/Heading";
-import LinkCard from "../components/AddLinks/LinkCard";
-import UserContext from "../context/UserContext";
-import { useContext, useState } from "react";
+import {
+  Outlet,
+  useNavigate,
+  useParams,
+  useLocation,
+  NavLink,
+} from "react-router-dom";
 
 const Layout = () => {
-  const { user, addLink } = useContext(UserContext);
-  // Load links initially from context
-
-  const handleAddNewLink = () => {
-    const basicLink = {
-      platform_name: "",
-      link: "",
-      isValid: false,
-    };
-    addLink(basicLink); // Add a new empty card
-  };
+  const navigate = useNavigate();
+  const params = useParams();
+  const location = useLocation();
+  console.log({ navigate });
+  console.log({ params });
+  console.log(location);
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="pt-2">
@@ -45,20 +43,28 @@ const Layout = () => {
 
               {/* Middle - 2 buttons */}
               <div className="hidden md:flex space-x-4">
-                <ButtonWithIcon>
-                  <LinkIcon />
-                  Links
-                </ButtonWithIcon>
-                <ButtonWithIcon>
-                  <Profile />
-                  Profile Details
-                </ButtonWithIcon>
+                <NavLink to={`/create-link`}>
+                  <ButtonWithIcon
+                    isnavSelected={location.pathname === "/create-link"}
+                  >
+                    <LinkIcon />
+                    Links
+                  </ButtonWithIcon>
+                </NavLink>
+                <NavLink to={`/create-profile`}>
+                  <ButtonWithIcon
+                    isnavSelected={location.pathname === "/create-profile"}
+                  >
+                    <Profile />
+                    Profile Details
+                  </ButtonWithIcon>
+                </NavLink>
               </div>
 
               {/* Right side - Button */}
-              <div>
+              <NavLink to={`/preview`}>
                 <ButtonWithoutBackground>Preview</ButtonWithoutBackground>
-              </div>
+              </NavLink>
             </div>
           </div>
         </nav>
@@ -69,7 +75,9 @@ const Layout = () => {
           </div>
 
           <div className="w-1/2 bg-white">
-            <div className="mx-4 my-4 overflow-auto">
+            <Outlet />
+
+            {/* <div className="mx-4 my-4 overflow-auto">
               <Heading
                 title="Customize Your Links"
                 description="Add your favourite url And share your profile"
@@ -80,13 +88,18 @@ const Layout = () => {
               >
                 + Add new link
               </ButtonWithoutBackground>
-              <div className=" flex flex-col gap-4">
+              <div className=" flex flex-col gap-4 h-[500px] overflow-auto mt-2 mb-2">
                 {user?.links?.length > 0 &&
                   user.links.map((card, index) => (
-                    <LinkCard key={index} linkdata={card} />
+                    <LinkCard key={index} linkdata={card} index={index} />
                   ))}
               </div>
-            </div>
+              <div className="flex items-end justify-end">
+                <ButtonWithBackground onClick={SaveTolocalStorage}>
+                  Save
+                </ButtonWithBackground>
+              </div>
+            </div> */}
           </div>
         </div>
 
