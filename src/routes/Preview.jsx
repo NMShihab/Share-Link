@@ -7,9 +7,10 @@ import PlatformButton from "../components/ui/PlatformButton";
 import SkeletonButton from "../components/ui/skeletonLoader/SkeletonButton";
 import SkeletonCircle from "../components/ui/skeletonLoader/SkeletonCircle";
 import Shimmer from "../components/ui/skeletonLoader/Shimmer";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const PreviewPage = () => {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   const handleShareLink = () => {
     const currentUrl = window.location.href;
@@ -23,6 +24,25 @@ const PreviewPage = () => {
       });
   };
 
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const items = Array.from(user.links);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    const updatedUser = {
+      ...user,
+      links: items,
+    };
+
+    setUser((prevUser) => ({
+      ...prevUser,
+      links: items,
+    }));
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-500 from-50% to-white to-50%">
       <div className="pt-4">
@@ -30,9 +50,6 @@ const PreviewPage = () => {
           <NavLink to={"/create-link"}>
             <ButtonWithoutBackground>Back to Editor</ButtonWithoutBackground>
           </NavLink>
-          {/* <button className="text-gray-700 font-semibold">
-            Back to Editor
-          </button> */}
 
           <ButtonWithBackground onClick={handleShareLink}>
             Share Link
@@ -49,40 +66,69 @@ const PreviewPage = () => {
               className="w-24 h-24 rounded-full object-cover mx-auto mb-4"
             />
           ) : (
-            <SkeletonCircle size={"h-24 w-24"} />
+            <div className="flex justify-center items-center">
+              <SkeletonCircle size={"h-24 w-24"} />
+            </div>
           )}
           {user.first_name ? (
             <h2 className="text-2xl font-bold mb-2">
               {user.first_name} {user.last_name}
             </h2>
           ) : (
-            <Shimmer height={"h-6"} width={"w-24"} />
+            <div className="flex justify-center items-center mt-4">
+              <Shimmer height={"h-4"} width={"w-24"} />
+            </div>
           )}
 
           {user.email ? (
             <p className="text-gray-600 mb-4">{user.email}</p>
           ) : (
-            <Shimmer height={"h-2"} width={"w-24"} />
+            <div className="flex justify-center items-center mt-4 mb-2">
+              <Shimmer height={"h-2"} width={"w-24"} />
+            </div>
           )}
-          <div className="space-y-2">
-            {user.links.length > 0 ? (
-              user.links.map(
-                (card) =>
-                  card.isValid && (
-                    <PlatformButton
-                      platformName={card.platform_name}
-                      link={card.link}
-                      key={card.id}
-                    />
-                  )
-              )
-            ) : (
-              <>
-                <SkeletonButton width={"w-48"} height={"h-10"} />
-                <SkeletonButton width={"w-48"} height={"h-10"} />
-              </>
-            )}
-          </div>
+
+          {user.links.length > 0 ? (
+            <DragDropContext onDragEnd={onDragEnd}>
+              <Droppable droppableId="links">
+                {(provided) => (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    className="space-y-2"
+                  >
+                    {user.links.map((link, index) => (
+                      <Draggable
+                        key={link.id}
+                        draggableId={link.id.toString()}
+                        index={index}
+                      >
+                        {(provided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <PlatformButton
+                              platformName={link.platform_name}
+                              link={link.link}
+                              key={link.id}
+                            />
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+          ) : (
+            <div className="flex flex-col gap-4 justify-center items-center mt-4">
+              <SkeletonButton width={"w-48"} height={"h-10"} />
+              <SkeletonButton width={"w-48"} height={"h-10"} />
+            </div>
+          )}
         </div>
       </div>
     </div>

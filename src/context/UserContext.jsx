@@ -41,13 +41,9 @@ export const UserProvider = ({ children }) => {
     }
   }, []);
 
-  // Save to localStorage when user updates
-  // useEffect(() => {
-  //   localStorage.setItem("user", JSON.stringify(user));
-  // }, [user]);
-
   const SaveTolocalStorage = () => {
     localStorage.setItem("user", JSON.stringify(user));
+    alert("Data has been saved in local storage!");
   };
   const addLink = (linkData) => {
     setUser((prevUser) => ({

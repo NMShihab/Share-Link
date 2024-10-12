@@ -3,6 +3,7 @@ import Profile from "../components/icons/Profile";
 import LinkIcon from "../components/icons/LinkIcon";
 import ButtonWithIcon from "../components/ui/ButtonWithIcon";
 import Left from "../components/Left";
+import { redirect } from "react-router-dom";
 import {
   Outlet,
   useNavigate,
@@ -10,6 +11,7 @@ import {
   useLocation,
   NavLink,
 } from "react-router-dom";
+import { useEffect } from "react";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -18,6 +20,7 @@ const Layout = () => {
   console.log({ navigate });
   console.log({ params });
   console.log(location);
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="pt-2">
@@ -42,13 +45,13 @@ const Layout = () => {
               </div>
 
               {/* Middle - 2 buttons */}
-              <div className="hidden md:flex space-x-4">
+              <div className="flex  lg:space-x-4">
                 <NavLink to={`/create-link`}>
                   <ButtonWithIcon
                     isnavSelected={location.pathname === "/create-link"}
                   >
                     <LinkIcon />
-                    Links
+                    <span className="hidden lg:block">Links</span>
                   </ButtonWithIcon>
                 </NavLink>
                 <NavLink to={`/create-profile`}>
@@ -56,7 +59,7 @@ const Layout = () => {
                     isnavSelected={location.pathname === "/create-profile"}
                   >
                     <Profile />
-                    Profile Details
+                    <span className="hidden lg:block">Profile Details</span>
                   </ButtonWithIcon>
                 </NavLink>
               </div>
@@ -70,11 +73,11 @@ const Layout = () => {
         </nav>
 
         <div className="flex flex-row gap-2 mx-4 my-4 round">
-          <div className="w-1/2 bg-white">
+          <div className="lg:w-1/2 bg-white hidden lg:block ">
             <Left />
           </div>
 
-          <div className="w-1/2 bg-white">
+          <div className="lg:w-1/2 bg-white">
             <Outlet />
 
             {/* <div className="mx-4 my-4 overflow-auto">
