@@ -59,14 +59,14 @@ Navigate to the directory where you want to clone the project.
 Clone the GitHub repository using the following command:
 
 ```bash
-git clone https://github.com/your-username/your-repo.git
+git clone https://github.com/NMShihab/Share-Link.git
 ```
 
 Replace your-username/your-repo with the actual repository URL.
 Change directory to the cloned project:
 
 ```bash
-cd your_repo
+cd Share-Link
 ```
 
 ### Install Dependencies
